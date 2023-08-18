@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Run a step
+        uses: some-action
+        with:
+        distribution: ubuntu-latest
+
       - name: Checkout code
         uses: actions/checkout@v2
 
