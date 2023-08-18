@@ -21,11 +21,18 @@ jobs:
           sudo apt update
           sudo apt upgrade
           sudo apt-get install git-core
+      - name: Install required packages
+        run: |
+          sudo apt update
+          sudo apt upgrade
+          sudo apt-get install git-core
+      - name: Install repo command
+        run: |
           git clone https://github.com/akhilnarang/scripts
           cd scripts
           mkdir -p ~/bin
-          echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
-          source ~/.bashrc
+          echo 'export PATH="$HOME/bin:$PATH"' >> $HOME/.bashrc
+          source $HOME/.bashrc
           curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
           chmod a+x ~/bin/repo
       - name: Clone and sync ROM repository
