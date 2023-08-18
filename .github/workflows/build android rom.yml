@@ -19,17 +19,16 @@ jobs:
       - name: Install required packages
         run: |
           sudo apt update
-          sudo apt-get install -y build-essential git-core zip curl zlib1g-dev gawk flex bison unzip
-          sudo apt install python3-mako
-      - name: Install Android SDK
-        run: |
-          wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip
-          unzip platform-tools-latest-linux.zip -d $HOME/android-sdk/
-          echo 'export PATH="$HOME/android-sdk/tools:$HOME/android-sdk/platform-tools:$PATH"' >> $HOME/.bashrc
-          echo 'export PATH="$HOME/android-sdk/tools:$PATH"' >> $HOME/.bashrc
-          source $HOME/.bashrc
-          yes | $HOME/android-sdk/tools/bin/sdkmanager --licenses
-          chmod +x $HOME/android-sdk/tools/bin/sdkmanager
+          sudo apt upgrade
+          sudo apt-get install git-core
+          git clone https://github.com/akhilnarang/scripts
+          cd scripts
+          bash setup/ubuntu1604linuxmint18.sh
+          mkdir -p ~/bin
+          mkdir -p ~/android/lineage
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          cd ~/android/lineage
       - name: Clone and sync ROM repository
         run: |
           git clone https://github.com/LineageOS.git
