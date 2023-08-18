@@ -27,6 +27,8 @@ jobs:
           mkdir -p ~/android/lineage
           curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
           chmod a+x ~/bin/repo
+          echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+          source ~/.bashrc
           cd ~/android/lineage
       - name: Clone and sync ROM repository
         run: |
