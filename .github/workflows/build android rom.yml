@@ -10,8 +10,6 @@ jobs:
   build:
     name: "Build Android ROM"
     runs-on: ubuntu-latest
-    env:
-      PATH: ${{ runner.home }}/bin:${{ env.PATH }}
 
     steps:
       - name: Checkout code
@@ -36,7 +34,10 @@ jobs:
           mkdir -p $HOME/bin
           curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
           chmod a+x $HOME/bin/repo
-          export PATH="${HOME}/bin:${PATH}"
+
+      - name: Configure environment
+        run: |
+          echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
 
       - name: Clone and sync ROM repository
         run: |
