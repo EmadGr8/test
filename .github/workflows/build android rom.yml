@@ -30,13 +30,9 @@ jobs:
           cd ~/android/lineage
       - name: Clone and sync ROM repository
         run: |
-          git clone https://github.com/LineageOS/android.git
-          cd LineageOS
-          repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
-          repo sync --current-branch --no-tags --no-clone-bundle --optimized-fetch --force-broken
-          git clone https://github.com/EmadGr8/device_xiaomi_twolip.git -b LOS device/xiaomi/twolip
-          git clone https://github.com/EmadGr8/vendor_xiaomi_twolip.git -b tiramisu vendor/xiaomi/twolip
-          git clone https://github.com/EmadGr8/kernel_xiaomi_sdm660.git -b 13 kernel/xiaomi/sdm660
+          repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-20.0 -g default,-mips,-darwin,-notdefault
+          git clone https://github.com/EmadGr8/local_manifest.git --depth 1 -b LOS-20 .repo/local_manifests
+          repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
       - name: Build ROM
         run: |
           source build/envsetup.sh
