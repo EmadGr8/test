@@ -30,7 +30,7 @@ jobs:
           cd ~/android/lineage
       - name: Clone and sync ROM repository
         run: |
-          git clone https://github.com/LineageOS
+          git clone https://github.com/LineageOS/android.git
           cd LineageOS
           repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
           repo sync --current-branch --no-tags --no-clone-bundle --optimized-fetch --force-broken
