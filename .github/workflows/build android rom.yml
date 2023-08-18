@@ -28,7 +28,7 @@ jobs:
           echo 'export PATH="$HOME/android-sdk/tools:$HOME/android-sdk/platform-tools:$PATH"' >> $HOME/.bashrc
           echo 'export PATH="$HOME/android-sdk/tools:$PATH"' >> $HOME/.bashrc
           source $HOME/.bashrc
-          yes | sdkmanager --licenses
+          yes | $HOME/android-sdk/tools/bin/sdkmanager --licenses
       - name: Clone and sync ROM repository
         run: |
           git clone https://github.com/LineageOS.git
