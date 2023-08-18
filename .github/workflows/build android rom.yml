@@ -1,50 +1,55 @@
 name: "Build Android ROM"
+
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   build:
     name: "Build Android ROM"
     runs-on: ubuntu-latest
+    env:
+      PATH: ${{ runner.home }}/bin:${{ env.PATH }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '8'
           distribution: 'adopt'
+
       - name: Install required packages
         run: |
           sudo apt update
           sudo apt upgrade
           sudo apt-get install git-core
-      - name: Install required packages
-        run: |
-          sudo apt update
-          sudo apt upgrade
-          sudo apt-get install git-core
+
       - name: Install repo command
         run: |
           git clone https://github.com/akhilnarang/scripts
           cd scripts
-          mkdir -p ~/bin
-          echo 'export PATH="$HOME/bin:$PATH"' >> $HOME/.bashrc
-          source $HOME/.bashrc
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-          chmod a+x ~/bin/repo
+          mkdir -p $HOME/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
+          chmod a+x $HOME/bin/repo
+          export PATH="${HOME}/bin:${PATH}"
+
       - name: Clone and sync ROM repository
         run: |
           repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-20.0 -g default,-mips,-darwin,-notdefault
           git clone https://github.com/EmadGr8/local_manifest.git --depth 1 -b LOS-20 .repo/local_manifests
           repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
+
       - name: Build ROM
         run: |
           source build/envsetup.sh
           lunch lineage_twolip-user
           make -j$(nproc) bacon
+
       - name: Upload ROM artifact
         uses: actions/upload-artifact@v2
         with:
