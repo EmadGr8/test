@@ -30,13 +30,13 @@ jobs:
           cd ~/android/lineage
       - name: Clone and sync ROM repository
         run: |
-          git clone https://github.com/LineageOS.git
-          cd LineageOS
           repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
-          repo sync --current-branch --no-tags --no-clone-bundle --optimized-fetch --force-broken
+          repo sync -j8
+          git clone https://github.com/EmadGr8/device_xiaomi_twolip.git -b LOS device/xiaomi/twolip
+          git clone https://github.com/EmadGr8/vendor_xiaomi_twolip.git -b tiramisu vendor/xiaomi/twolip
+          git clone https://github.com/EmadGr8/kernel_xiaomi_sdm660.git -b 13 kernel/xiaomi/sdm660
       - name: Build ROM
         run: |
-          cd LineageOS
           source build/envsetup.sh
           lunch lineage_twolip-user
           make -j$(nproc) bacon
@@ -44,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ROM
-          path: LineageOS/out/target/product/target_device/*.zip
+          path: lineage/out/target/product/target_device/*.zip
