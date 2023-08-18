@@ -19,9 +19,8 @@ jobs:
       - name: Install required packages
         run: |
           sudo apt update
-          sudo apt-get install -y build-essential git-core zip curl zlib1g-dev gawk flex bison unzip sudo apt update
+          sudo apt-get install -y build-essential git-core zip curl zlib1g-dev gawk flex bison unzip
           sudo apt install python3-mako
-          sudo apt install install
       - name: Install Android SDK
         run: |
           wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip
