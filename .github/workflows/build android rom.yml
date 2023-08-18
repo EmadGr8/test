@@ -1,59 +1,24 @@
-name: Build Android ROM
-
+name: "Build Dark Ages kernel on darky."              # Description of the workflow.
 on:
   push:
-    branches:
-      - main
-
+    branches: darky                                   # Branch to build.
+  workflow_dispatch:                                  # Allow to manually trigger workflow.
 jobs:
   build:
+    name: "Build Dark Ages kernel"
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Run a step
-        uses: docker://ubuntu:20.04
-        with:
-         distribution: ubuntu-latest
-
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '8'
-          
-      - name: Install required packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential git-core zip curl zlib1g-dev gawk flex bison unzip python-mako
-
-      - name: Install Android SDK
-        run: |
-          wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip
-          unzip platform-tools-latest-linux.zip -d $HOME/android-sdk/
-          echo 'export PATH="$HOME/android-sdk/platform-tools:$PATH"' >> $HOME/.bashrc
-          echo 'export PATH="$HOME/android-sdk/tools:$PATH"' >> $HOME/.bashrc
-          source $HOME/.bashrc
-          yes | sdkmanager --licenses
-
-      - name: Clone and sync ROM repository
-        run: |
-          git clone https://github.com/LineageOS.git
-          cd LineageOS
-          repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
-          repo sync --current-branch --no-tags --no-clone-bundle --optimized-fetch --force-broken
-
-      - name: Build ROM
-        run: |
-          cd LineageOS
-          source build/envsetup.sh
-          lunch lineage_twolip-user
-          make -j$(nproc) bacon
-
-      - name: Upload ROM artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ROM
-          path: android-rom/out/target/product/target_device/*.zip
+    - name: "Checkout kernel source"                  # Clone the kernel source.
+      uses: actions/checkout@v2
+    - name: "Checkout zipper"                         # (OPTIONAL) Clone the AnyKernel3 template.
+      uses: actions/checkout@v2
+      with:
+        repository: lemniskett/AnyKernel3             # Your own AnyKernel3 repository.
+        path: zipper                                  # Clone to path "zipper", REQUIRED.
+    - name: "Android kernel build"                    # Build kernel with lemniskett/android-kernel-actions.
+      uses: lemniskett/android-kernel-actions@master
+      with:
+        arch: arm64                                   # Specify arch
+        compiler: gcc/9                               # Specify toolchain to use
+        defconfig: vince_defconfig                    # Specify defconfig to use
+        image: Image.gz-dtb
