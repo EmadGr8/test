@@ -8,10 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Run a step
-        uses: some-action
+        uses: docker://ubuntu:20.04
         with:
         distribution: ubuntu-latest
 
