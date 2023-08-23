@@ -1,17 +1,13 @@
 version: 2.1.0
 
 workflows:
-  version: 1
   your_workflow_name: # Replace with your desired workflow name
     name: Build Android ROM
-    environment:
-      variables:
-        MY_VARIABLE: "example"
 
     scripts:
       - name: Checkout code
         script: |
-          git clone https://github.com/your/repo.git
+          git clone https://github.com/EmadGr8/test.git
           cd repo
 
       - name: Set up JDK
