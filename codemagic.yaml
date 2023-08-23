@@ -1,0 +1,48 @@
+version: 2.1.0
+
+workflows:
+  version: 1
+  your_workflow_name: # Replace with your desired workflow name
+    name: Build Android ROM
+    environment:
+      variables:
+        MY_VARIABLE: "example"
+
+    scripts:
+      - name: Checkout code
+        script: |
+          git clone https://github.com/your/repo.git
+          cd repo
+
+      - name: Set up JDK
+        script: sudo apt update && sudo apt install -y openjdk-8-jdk
+
+      - name: Install required packages
+        script: sudo apt-get install -y git-core
+
+      - name: Set up Python
+        script: sudo apt-get install -y python3-pip && python3 -m pip install --user --upgrade gdown
+
+      - name: Install repo command and build environment
+        script: |
+          wget https://raw.githubusercontent.com/akhilnarang/scripts/master/setup/android_build_env.sh
+          chmod +x android_build_env.sh
+          ./android_build_env.sh
+
+      - name: Clone and sync ROM repository
+        script: |
+          repo init --depth=1 --no-repo-verify -u https://github.com/LineageOS/android.git -b lineage-20.0 -g default,-mips,-darwin,-notdefault
+          git clone https://github.com/EmadGr8/local_manifest.git --depth 1 -b LOS-20 .repo/local_manifests
+          repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
+
+      - name: Build ROM
+        script: |
+          source build/envsetup.sh
+          lunch lineage_twolip-user
+          make -j$(nproc) bacon
+
+      - name: Archive ROM artifact
+        script: |
+          cd lineage/out/target/product/target_device
+          zip -r ROM.zip *
+          codemagic artifacts add ROM.zip
