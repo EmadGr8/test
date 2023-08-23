@@ -5,10 +5,6 @@ workflows:
     name: Build Android ROM
 
     scripts:
-      - name: Checkout code
-        script: |
-          git clone https://github.com/EmadGr8/test.git
-          cd repo
 
       - name: Set up JDK
         script: sudo apt update && sudo apt install -y openjdk-8-jdk
